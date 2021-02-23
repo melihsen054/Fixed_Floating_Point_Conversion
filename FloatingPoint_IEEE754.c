@@ -80,17 +80,8 @@ float unpack754_32( uint32_t floatingToIntValue )
 }
 int main (int argc, char *argv[]) {
 	int h, k;
-	const float pi = 3.141592;
 	char fileName[100];
 	FILE * fp;
-	char fileName1[100];
-	FILE * fp1;
-    char fileName2[100];
-	FILE * fp2;
-    char fileName3[100];
-	FILE * fp3;
-    char fileName4[100];
-	FILE * fp4;
 
 	/*
 	 get _H and _N as program arguments
@@ -120,77 +111,6 @@ int main (int argc, char *argv[]) {
 	} else {
 		// No error
 		_N = conv2;
-	}
-    sprintf(fileName, "CosSinValues_H-%d_N-%d.mem" ,_H, _N);
-    fp = fopen(fileName,"w");
-	if (!fp)
-	{
-		printf("Failed to open text file\n");
-		exit(1);
-	}else{
-		for(h=0;h<=_H;h++){
-			for(k=0;k<_N;k++){
-                    uint32_t n;
-                    float f;
-				//fprintf (fp, "%f\t%f\n",(cosf(2*pi*h*k/_N)),(-1*sinf(2*pi*h*k/_N))); // print decimal
-
-				/*
-				The # part gives you a 0x in the output string.
-				The 0 and the x count against your "8" characters listed in the 08 part.
-				You need to ask for 10 characters if you want it to be the same.
-				*/
-				//fprintf (fp, "%#010x\t%#010x\n",(int)((cosf(2*pi*h*k/_N)+1)*1000000),(int)((-1*sinf(2*pi*h*k/_N)+1)*1000000)); //print hexadecimal
-                fprintf (fp, "%x\t%x\n",pack754_32(cosf(2*pi*h*k/_N)), pack754_32(-1*sinf(2*pi*h*k/_N)));//print ieee 754
-                //n = pack754_32(3.5);//convert the number into ieee754
-                //f = unpack754_32(n);//convert from ieee 754 to float
-                //fprintf (fp,"%x\t%f\n", n,f );
-			}
-		}
-		fclose (fp);
-	}
-	float Kp_real_initial [5]={40.0/20000*cosf(0),31.5*cosf(0.5*pi)/20000,50*cosf(0.3*pi)/20000,0,0};
-	float Kp_imag_initial [5]={0,31.5*sinf(0.5*pi)/20000,50*sinf(0.3*pi)/20000,0,0};
-	float Ki_real_initial [5]={15.0/20000*cosf(0),10*cosf(0.5*pi)/20000,10*cosf(0.3*pi)/20000,10*cosf(0.6*pi)/20000,0};
-	float Ki_imag_initial [5]={0,10*sinf(0.5*pi)/20000,10*sinf(0.3*pi)/20000,10*sinf(0.6*pi)/20000,0};
-
-
-	float Kp_real [_H];
-	float Kp_imag [_H];
-	float Ki_real [_H];
-	float Ki_imag [_H];
-
-	for(int ii=0;ii <= _H; ii++){
-            Kp_real [ii]=Kp_real_initial[ii%5];
-            Kp_imag [ii]=Kp_imag_initial[ii%5];
-            Ki_real [ii]=Ki_real_initial[ii%5];
-            Ki_imag [ii]=Ki_imag_initial[ii%5];
-	}
-
-	sprintf(fileName1, "r_Values_20sin+40.mem");
-    fp1 = fopen(fileName1,"w");
-    if (!fp1)
-	{
-		printf("Failed to open text file\n");
-		exit(1);
-	}else{
-			for(k=0;k<_N;k++){
-                    uint32_t n;
-                    float f;
-				//fprintf (fp, "%f\t%f\n",(cosf(2*pi*h*k/_N)),(-1*sinf(2*pi*h*k/_N))); // print decimal
-
-				/*
-				The # part gives you a 0x in the output string.
-				The 0 and the x count against your "8" characters listed in the 08 part.
-				You need to ask for 10 characters if you want it to be the same.
-				*/
-				//fprintf (fp, "%#010x\t%#010x\n",(int)((cosf(2*pi*h*k/_N)+1)*1000000),(int)((-1*sinf(2*pi*h*k/_N)+1)*1000000)); //print hexadecimal
-                fprintf (fp1, "%x\n",pack754_32(20*sinf(2*pi/60*0.5*k)+40));//print ieee 754
-                //n = pack754_32(3.5);//convert the number into ieee754
-                //f = unpack754_32(n);//convert from ieee 754 to float
-                //fprintf (fp,"%x\t%f\n", n,f );
-			}
-
-		fclose (fp1);
 	}
 	sprintf(fileName2, "Var_Values.mem");
     fp2 = fopen(fileName2,"w");
